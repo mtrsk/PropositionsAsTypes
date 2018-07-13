@@ -54,6 +54,17 @@
  
 \urlstyle{same}
 
+
+%----------------------------------------------------------------------------------------
+%	Commands
+%----------------------------------------------------------------------------------------
+
+\newcommand{\fst}[2]{\texttt{fst #1:#2}}
+\newcommand{\snd}[2]{\texttt{snd #1:#2}}
+
+\newcommand{\fstt}[1]{\texttt{fst #1}}
+\newcommand{\sndd}[1]{\texttt{snd #1}}
+
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -66,6 +77,7 @@
 Universidade Federal do Maranhão \\ % Your institution for the title page
 \medskip
 \textit{marcos.schonfinkel@gmail.com}\\ % Your email address
+\href{https://github.com/mschonfinkel/PropositionsAsTypes}{https://github.com/mschonfinkel/PropositionsAsTypes}
 
 \vspace*{2\baselineskip}
 GELF - Grupo de Estudos em Lógica e Filosofia Formal
@@ -74,7 +86,12 @@ GELF - Grupo de Estudos em Lógica e Filosofia Formal
 
 Baseado no artigo original \cite{wadlertypes15} e apresentação de Philip Wadler.
 }
+
+
+
 \date{\today} % Date, can be changed to a custom date
+
+
 
 \begin{document}
 
@@ -779,7 +796,7 @@ Descoberto por Haskell Curry.
 \RightLabel{$\land \mathcal{I}$}
 \BinaryInfC{$(M,N) : A \land B$}
 \RightLabel{$\land 1 \mathcal{E}$}
-\UnaryInfC{$\texttt{fst } (M,N) : A$}
+\UnaryInfC{$\fst{(M,N)}{A}$}
 \end{prooftree}
 
 \column{0.4\linewidth}
@@ -790,6 +807,67 @@ Descoberto por Haskell Curry.
 \end{prooftree}
 
 \end{columns}
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Computação}
+
+\begin{prooftree}
+\AxiomC{[$z : B \land A$]}
+\RightLabel{$\land 2 \mathcal{E}$}
+\UnaryInfC{$\snd{z}{A}$}
+\AxiomC{[$z : B \land A$]}
+\RightLabel{$\land 1 \mathcal{E}$}
+\UnaryInfC{$\fst{z}{B}$}
+\RightLabel{$\land \mathcal{I}$}
+\BinaryInfC{$ ( \sndd{z} , \fstt{z}) : A \land B$}
+\RightLabel{$\Rightarrow \mathcal{I}$}
+\UnaryInfC{$\lambda z. ( \sndd{z} , \fstt{z}) : (B \land A) \rightarrow (A \land B)$}
+\AxiomC{[$y:B$]}
+\AxiomC{[$x:A$]}
+\RightLabel{$\land \mathcal{I}$}
+\BinaryInfC{$(y,x) : B \land A$}
+\RightLabel{$\Rightarrow \mathcal{E}$}
+\BinaryInfC{$(\lambda z. ( \sndd{z} , \fstt{z}))(y,x) : (A, B) $}
+\end{prooftree}
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Computação $\leftrightarrows$ Simplificação de Provas}
+
+\begin{prooftree}
+\AxiomC{[$y : B$]}
+\AxiomC{[$x : A$]}
+\RightLabel{$\land \mathcal{I}$}
+\BinaryInfC{$(y,x) : B \land A$}
+\RightLabel{$\land 2 \mathcal{E}$}
+\UnaryInfC{$\snd{(y,x)}{A}$}
+\AxiomC{[$y : B$]}
+\AxiomC{[$x : A$]}
+\RightLabel{$\land \mathcal{I}$}
+\BinaryInfC{$(y,x) : B \land A$}
+\RightLabel{$\land 1 \mathcal{E}$}
+\UnaryInfC{$\fst{(y,x)}{B}$}
+\RightLabel{$\land \mathcal{I}$}
+\BinaryInfC{$( \sndd{z} , \fstt{z}) : A \land B$}
+\end{prooftree}
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Computação $\leftrightarrows$ Simplificação de Provas}
+
+\begin{prooftree}
+\AxiomC{[$x : A$]}
+\AxiomC{[$y : B$]}
+\RightLabel{$\land \mathcal{I}$}
+\BinaryInfC{$(x,y) : A \land B$}
+\end{prooftree}
 
 \end{frame}
 
@@ -990,14 +1068,18 @@ f (x, ~\texttt{Right } z) &= \texttt{Right } (x, z)
 %------------------------------------------------
 
 \begin{frame}{Coq}
-
+\begin{columns}
+\column{0.5\linewidth}
+\centering
+\includegraphics[width=4cm]{coq.png}
+\column{0.5\linewidth}
 Learning resources:
 
 \begin{itemize}
 \item \href{https://softwarefoundations.cis.upenn.edu/}{Software Foundations}
 \item \href{https://math-comp.github.io/mcb/}{Mathematical Components}
 \end{itemize}
-
+\end{columns} 
 \end{frame}
 
 %------------------------------------------------
@@ -1021,7 +1103,15 @@ Learning resources:
 
 \end{frame}
 
+\begin{frame}{Conclusão}
 
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{eday.jpg}
+\caption{Independence Day (1996)}
+\end{figure}
+
+\end{frame}
 
 %------------------------------------------------
 % Bibliography
