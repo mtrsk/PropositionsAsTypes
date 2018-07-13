@@ -67,6 +67,9 @@ Universidade Federal do Maranhão \\ % Your institution for the title page
 \medskip
 \textit{marcos.schonfinkel@gmail.com}\\ % Your email address
 
+\vspace*{2\baselineskip}
+GELF - Grupo de Estudos em Lógica e Filosofia Formal
+
 \vspace*{6\baselineskip}
 
 Baseado no artigo original \cite{wadlertypes15} e apresentação de Philip Wadler.
@@ -263,6 +266,8 @@ Prova:
 \end{frame}
 
 %------------------------------------------------
+
+\subsection{Simplificanto Provas}
 
 \begin{frame}{Simplificando Provas}
 
@@ -518,10 +523,9 @@ Baseado (roubado!) no tutorial interativo de \cite{yanglogitext2012}.
 \begin{block}{}
 
 \begin{align*}
-L, M, N &::=  \quad x \\
-        &\mid \quad (\lambda x.M) \\
-        &\mid \quad (M ~ N) 
+s &::=  x \mid (\lambda x.s) \mid (s ~ s)
 \end{align*}
+onde $x$ é uma variável atômica.
 
 \end{block}
 
@@ -534,7 +538,7 @@ L, M, N &::=  \quad x \\
 \begin{block}{Combinador Y}
 \vskip2mm
 \begin{equation}
-Y = \lambda f.(\lambda x.(f (x x))~\lambda x.(x x))
+Y = \lambda f.(\lambda x.(f (x x)) ~\lambda x.(x x))
 \end{equation}
 \vskip2mm
 
@@ -579,7 +583,6 @@ Descoberto por Haskell Curry.
 
 \begin{frame}{$\lambda$-Cálculo Simplesmente Tipado}
 
-
 \begin{columns}
 \column{0.5\linewidth}
 \centering
@@ -601,7 +604,6 @@ Descoberto por Haskell Curry.
 \end{prooftree}
 
 \end{columns}
-
 
 \end{frame}
 
@@ -728,6 +730,72 @@ Descoberto por Haskell Curry.
 
 %------------------------------------------------
 
+\begin{frame}{Valorando programas}
+
+\begin{columns}
+\column{0.4\linewidth}
+\centering
+
+\begin{prooftree}
+\AxiomC{[$x : A$]}
+\Deduce$N : \fCenter ~B$
+\RightLabel{$\Rightarrow \mathcal{I}$}
+\UnaryInfC{$\lambda x.N : A \Rightarrow B$}
+\AxiomC{}
+\Deduce$M : \fCenter ~A$
+\RightLabel{$\Rightarrow \mathcal{E}$}
+\BinaryInfC{$(\lambda x.N)~ M : B$}
+\end{prooftree}
+
+\column{0.4\linewidth}
+
+\begin{prooftree}
+\AxiomC{}
+\Deduce$ \fCenter $
+\noLine
+\UnaryInfC{$M : A$}
+\Deduce$ \fCenter $
+\noLine
+\UnaryInfC{$N\{M / x \} : B$}
+\end{prooftree}
+
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Valorando programas}
+
+\begin{columns}
+\column{0.4\linewidth}
+\centering
+
+\begin{prooftree}
+\AxiomC{}
+\Deduce$M : \fCenter ~A $
+\AxiomC{}
+\Deduce$N : \fCenter ~B $
+\RightLabel{$\land \mathcal{I}$}
+\BinaryInfC{$(M,N) : A \land B$}
+\RightLabel{$\land 1 \mathcal{E}$}
+\UnaryInfC{$\texttt{fst } (M,N) : A$}
+\end{prooftree}
+
+\column{0.4\linewidth}
+
+\begin{prooftree}
+\AxiomC{}
+\Deduce$M : \fCenter ~A$
+\end{prooftree}
+
+\end{columns}
+
+\end{frame}
+
+
+%------------------------------------------------
+
 \begin{frame}{A diferença entre os dois Cálculos}
 \begin{columns}
 \column{0.38\linewidth}
@@ -784,6 +852,87 @@ value of type $B$.”
 
 %------------------------------------------------
 
+\begin{frame}{Disjunção}
+
+“$A \lor B$ corresponds to a disjoint sum $A + B$, that
+is, a variant with two alternatives. A proof of the
+proposition $A \lor B$ consists of either a proof of $A$
+or a proof of $B$, including an indication of which
+of the two has been proved. Similarly, a value of
+type $A + B$ consists of either a value of type $A$ or
+a value of type $B$, including an indication of
+whether this is a left or right summand.”
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Implicação}
+
+“$A \Rightarrow B$ corresponds to function space $A \rightarrow B$. A proof of the proposition $A \Rightarrow B$ consists of a procedure that given a proof of $A$ yields a proof of $B$. Similarly, a value of type $A \rightarrow B$ consists of a function that when applied to a value of type $A$ returns a value of type $B$.”
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{$P \land (Q \lor R) \Rightarrow (P \land Q) \lor (P \land R) $}
+
+\begin{columns}
+\column{0.3\linewidth}
+\centering
+
+\begin{align*}
+A \land B &\longmapsto A \times B
+\end{align*}
+
+\begin{prooftree}
+\AxiomC{$x : A$}
+\AxiomC{$y : B$}
+\BinaryInfC{$(x,y) : A \times B$}
+\end{prooftree}
+
+\column{0.3\linewidth}
+
+\begin{align*}
+A \lor B &\longmapsto A + B
+\end{align*}
+
+\begin{prooftree}
+\AxiomC{$x : A$}
+\UnaryInfC{$\texttt{Left } x : (A + B)$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$y : B$}
+\UnaryInfC{$\texttt{Right } y : (A + B)$}
+\end{prooftree}
+
+\column{0.3\linewidth}
+
+\begin{align*}
+A \Rightarrow B &\longmapsto A \rightarrow B
+\end{align*}
+
+Construir uma função $f : A \rightarrow B$.
+
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{$P \times (Q + R) \rightarrow (P \times Q) + (P \times R) $}
+
+\begin{align*}
+f (x, ~\texttt{Left } y) &= \texttt{Left } (x, y)\\
+f (x, ~\texttt{Right } z) &= \texttt{Right } (x, z) 
+\end{align*}
+
+\end{frame}
+
+
+%------------------------------------------------
+
 \begin{frame}{Isomorfismos}
 
 \begin{block}{}
@@ -833,6 +982,40 @@ value of type $B$.”
                  &  &      
 \end{tabular}
 \end{center}
+
+\end{block}
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}{Coq}
+
+Learning resources:
+
+\begin{itemize}
+\item \href{https://softwarefoundations.cis.upenn.edu/}{Software Foundations}
+\item \href{https://math-comp.github.io/mcb/}{Mathematical Components}
+\end{itemize}
+
+\end{frame}
+
+%------------------------------------------------
+
+\section{Conclusão}
+
+\begin{frame}{Conclusão}
+
+\begin{block}{}
+
+\[
+\begin{array}{rcccl}
+\textsf{PROGRAMS} & \Longleftrightarrow & \textsf{LOGIC} & \Longleftrightarrow & \textsf{CATEGORIES}\\
+\textsf{type} & \Longleftrightarrow & \textsf{formula} & \Longleftrightarrow & \textsf{object}\\
+\textsf{function} & \Longleftrightarrow & \textsf{implication} & \Longleftrightarrow & \textsf{arrow}\\
+\textsf{tuple} & \Longleftrightarrow & \textsf{conjunction} & \Longleftrightarrow & \textsf{product}\\
+\end{array}
+\]
 
 \end{block}
 
